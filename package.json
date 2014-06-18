@@ -1,0 +1,36 @@
+{
+  "name": "gulp-extract-sourcemap",
+  "version": "0.0.1",
+  "description": "Gulp Task to strips an inline source into its own file and updates the original file to reference the new external source map",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/shonny-ua/gulp-extract-sourcemap.git"
+  },
+  "keywords": [
+    "gulp",
+    "gulpplugin",
+    "sourcemaps",
+    "javascript"
+  ],
+  "author": "Oleksandr Ovcharenko <shonny.ua@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "convert-source-map": "^0.3.4",
+    "gulp-util": "^2.2.17",
+    "through2": ">=0.5.1"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/shonny-ua/gulp-extract-sourcemap/issues"
+  },
+  "homepage": "https://github.com/shonny-ua/gulp-extract-sourcemap"
+}
