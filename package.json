@@ -19,7 +19,10 @@
     "sourcemaps",
     "javascript"
   ],
-  "author": "Oleksandr Ovcharenko <shonny.ua@gmail.com>",
+  "author": {
+    "name": "Oleksandr Ovcharenko",
+    "email": "shonny.ua@gmail.com"
+  },
   "license": "MIT",
   "dependencies": {
     "convert-source-map": "^0.3.4",
