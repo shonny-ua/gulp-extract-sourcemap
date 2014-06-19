@@ -17,7 +17,8 @@
     "gulp",
     "gulpplugin",
     "sourcemaps",
-    "javascript"
+    "javascript",
+    "browserify"
   ],
   "author": {
     "name": "Oleksandr Ovcharenko",

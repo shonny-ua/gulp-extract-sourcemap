@@ -7,20 +7,16 @@ var convSM      = require('convert-source-map');
 
 var PLUGIN_NAME = 'gulp-extract-sourcemap';
 
-function extract(jsFileName, opts){
+function extract(opts){
     if (!opts) {
         opts = {};
     }
 
     return through.obj(function (file, enc, cb) {
         if (!file.isNull()) {
-            if (!jsFileName) {
-                jsFileName = path.basename(file.path);
-            }
-
             var src = file.contents.toString('utf8');
             var sMap = '';
-            var sMapFileName = jsFileName + '.map';
+            var sMapFileName = opts.sourceMappingFileName || ( path.basename(file.path) + '.map' );
 
             try {
                 sMap = convSM.fromComment(src).toJSON();
@@ -57,7 +53,7 @@ function extract(jsFileName, opts){
                         var newSource = path.relative( basedir, sMap.sources[i] );
                         
                         if (opts.fakeFix && /\/fake_[0-9a-f]{8}\.js$/.test(newSource)) {
-                            var fNameRX = new RegExp(path.basename(newSource), 'g');
+                            var fNameRX = new RegExp( path.basename(newSource).replace(/[\-\[\]\{\}\(\)\*\+\?\.\^\$\|]/g, "\\$&"), 'g' );
                             src = src.replace(fNameRX, path.basename(file.path));
                             
                             newSource = newSource.replace(fNameRX, path.basename(file.path));
@@ -78,7 +74,6 @@ function extract(jsFileName, opts){
             }
 
             file.contents = new Buffer(src);
-            file.path = path.join(file.base, jsFileName);
         }
         this.push(file);
         cb();
