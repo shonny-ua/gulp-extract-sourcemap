@@ -13,9 +13,9 @@ function extract(opts){
     }
 
     return through.obj(function (file, enc, cb) {
+        var sMap = '';
         if (!file.isNull()) {
             var src = file.contents.toString('utf8');
-            var sMap = '';
             var sMapFileName = opts.sourceMappingFileName || ( path.basename(file.path) + '.map' );
 
             try {
@@ -76,6 +76,7 @@ function extract(opts){
             file.contents = new Buffer(src);
         }
         this.push(file);
+        this.emit('postextract', sMap);
         cb();
     });
 }
