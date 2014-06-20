@@ -1,4 +1,4 @@
-# [gulp](https://github.com/wearefractal/gulp)-extract-sourcemap 
+# [gulp](https://github.com/wearefractal/gulp)-extract-sourcemap [![Build Status](https://travis-ci.org/shonny-ua/gulp-extract-sourcemap.svg?branch=master)](https://travis-ci.org/shonny-ua/gulp-extract-sourcemap)
 
 > Gulp Task to strips an inline source into its own file and updates the original file to reference the new external source map
 
