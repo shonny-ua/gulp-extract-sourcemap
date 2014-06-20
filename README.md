@@ -1,4 +1,9 @@
-# [gulp](https://github.com/wearefractal/gulp)-extract-sourcemap [![Build Status](https://travis-ci.org/shonny-ua/gulp-extract-sourcemap.svg?branch=master)](https://travis-ci.org/shonny-ua/gulp-extract-sourcemap)
+[![Build Status](https://travis-ci.org/shonny-ua/gulp-extract-sourcemap.svg)](https://travis-ci.org/shonny-ua/gulp-extract-sourcemap)
+[![Dependencies](https://david-dm.org/shonny-ua/gulp-extract-sourcemap.png)](https://david-dm.org/shonny-ua/gulp-extract-sourcemap)
+[![devDependencies](https://david-dm.org/shonny-ua/gulp-extract-sourcemap/dev-status.png)](https://david-dm.org/shonny-ua/gulp-extract-sourcemap#info=devDependencies&view=table)
+[![NPM version](https://badge.fury.io/js/gulp-extract-sourcemap.svg)](http://badge.fury.io/js/gulp-extract-sourcemap)
+
+# [gulp](https://github.com/wearefractal/gulp)-extract-sourcemap
 
 > Gulp Task to strips an inline source into its own file and updates the original file to reference the new external source map
 
