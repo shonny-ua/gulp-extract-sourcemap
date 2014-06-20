@@ -16,25 +16,25 @@ function extract(opts){
         var sMap = '';
         if (!file.isNull()) {
             var src = file.contents.toString('utf8');
-            var sMapFileName = opts.sourceMappingFileName || ( path.basename(file.path) + '.map' );
+            var sMapFileName = opts.sourceMappingFileName ? path.basename(opts.sourceMappingFileName) : ( path.basename(file.path) + '.map' );
 
-            try {
-                sMap = convSM.fromComment(src).toJSON();
-            } catch (x) {
-                this.emit('error', new PluginError(PLUGIN_NAME,  x));
-                sMap = '';
+            var pos = src.indexOf('//# sourceMappingURL=data:application/json;base64,');
+            if (!~pos) {
+                pos = src.indexOf('//@ sourceMappingURL=data:application/json;base64,');
             }
-                
+
+            if (~pos) {
+                try {
+                    sMap = convSM.fromComment(src).toJSON();
+                } catch (x) {
+                    this.emit('error', new PluginError(PLUGIN_NAME,  x));
+                    sMap = '';
+                }
+
+                src = src.substr(0, pos);
+            }
+
             if (sMap) {
-                var pos = src.indexOf('//# sourceMappingURL=data:application/json;base64,');
-                if (!~pos) {
-                    pos = src.indexOf('//@ sourceMappingURL=data:application/json;base64,');
-                }
-
-                if (~pos) {
-                    src = src.substr(0, pos) + '//# sourceMappingURL=' + sMapFileName;
-                }
-
                 try {
                     sMap = JSON.parse(sMap);
                 } catch (x) {
@@ -71,11 +71,16 @@ function extract(opts){
                     path: path.join(file.base, sMapFileName),
                     contents: new Buffer( JSON.stringify( sMap ) )
                 }));
+
+                src += '//# sourceMappingURL=' + (opts.sourceMappingFileName || sMapFileName);
             }
 
             file.contents = new Buffer(src);
         }
         this.push(file);
+        if (!sMap) {
+            this.emit('missing-map');
+        }
         this.emit('postextract', sMap);
         cb();
     });

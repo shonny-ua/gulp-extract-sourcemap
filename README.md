@@ -29,6 +29,9 @@ gulp.task('bundle', function() {
             removeSourcesContent:   true,
             fakeFix:                true
         }) )
+        .on('postextract', function(sourceMap){
+            console.log(sourceMap);
+        })
         .pipe( gulp.dest( 'dist' ) );
 });
 ```
@@ -62,6 +65,26 @@ You set a flag, fakeFix, which will fix it. The fake script filename wil changed
 Type : `String`
 
 As defult gulp-extract-sourcemap plugin cteate an external source map named as a streemed source file name with '.map' suffix. To specify different source map filename use this param.
+
+### Events
+
+Other than standard Node.js stream events, gulp-extract-sourcemap emits its own events.
+
+#### missing-map
+
+```javascript
+.on('missing-map', function(){})
+```
+emitted if no map was found in the stream (the src still is piped through in this case, but no map file is piped)
+
+#### postextract
+
+```javascript
+.on('postextract', function(sourceMapJson){})
+```
+
+Event triggered after the source map extracting process is over and provides the source map data json object as an argument to the callback.
+
 
 ### Works with gulp-extract-sourcemap
 
