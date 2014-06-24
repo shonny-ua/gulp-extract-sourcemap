@@ -5,7 +5,24 @@
 
 # [gulp](https://github.com/wearefractal/gulp)-extract-sourcemap
 
-> Gulp Task to strips an inline source into its own file and updates the original file to reference the new external source map
+<table>
+<tr> 
+<td>Package</td><td>gulp-extract-sourcemap</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Gulp Task to strips an inline source into its own file and updates the original file to reference the new external source map</td>
+</tr>
+<tr>
+<td>Node Version</td>
+<td>>= 0.8</td>
+</tr>
+<tr>
+<td>Gulp Version</td>
+<td>3.x</td>
+
+</tr>
+</table>
 
 ## Install
 
