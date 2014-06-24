@@ -79,7 +79,8 @@ gulp.task('bundle', function() {
             basePath: './dist/',
             output: {
                 source_map: exchange.source_map // it's necessary 
-                            //to correct generate of a final source map of an uglified javascript bundle
+                            // to correct generate of a final source map
+                            // of an uglified javascript bundle
             }
         }) )
         .pipe( gulp.dest( 'dist' ) );
