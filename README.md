@@ -5,6 +5,8 @@
 
 # [gulp](https://github.com/wearefractal/gulp)-extract-sourcemap
 
+[![NPM](https://nodei.co/npm/gulp-extract-sourcemap.png?downloads=true&stars=true)](https://nodei.co/npm/gulp-extract-sourcemap/)
+
 <table>
 <tr> 
 <td>Package</td><td>gulp-extract-sourcemap</td>
@@ -32,28 +34,53 @@ $ npm install --save-dev gulp-extract-sourcemap
 
 ## Usage
 
+~~var browserify   = require('gulp-browserify');~~
+Gulp added [~~gulp-browserify~~](https://github.com/deepak1556/gulp-browserify) to their [blacklist](https://github.com/gulpjs/plugins/issues/47)!
 ```js
 var gulp         = require('gulp');
-var browserify   = require('gulp-browserify');
+var browserify   = require('browserify');
+var vinylSource  = require('vinyl-source-stream');
+var vinylBuffer  = require('vinyl-buffer');
 var extractor    = require('gulp-extract-sourcemap');
+var uglify       = require('gulp-uglifyjs');
+var filter       = require('gulp-filter');
 var path         = require('path');
 
 gulp.task('bundle', function() {
-    return gulp.src( ['src/js/app.js'])
-        .pipe( browserify({
+    var exchange = {
+        source_map: {
+            file: 'bundle.min.js.map',
+            root: '/',
+            orig: ''
+        }
+    };
+
+    return browserify( ['./app.js'], {
             basedir:        'src/js/',
             commondir:      false,
-            insertGlobals:  true,
-            debug:          true
+            insertGlobals:  true
         }) )
+        .bundle({
+            debug: true //it's necessary to a source map generate
+        })
+        .pipe( vinylSource( 'bundle.js' ) )
+        .pipe( vinylBuffer() )
         .pipe( extractor({
             basedir:                path.join(__dirname, 'dist'),
-            removeSourcesContent:   true,
-            fakeFix:                true
+            removeSourcesContent:   true
         }) )
         .on('postextract', function(sourceMap){
             console.log(sourceMap);
+            exchange.source_map.orig = sourceMap;
         })
+        .pipe( filter('**/*.js') )
+        .pipe( uglify( 'bundle.min.js', {
+            outSourceMap: true,
+            basePath: './dist/',
+            output: {
+                source_map: exchange.source_map // it's necessary to correct generate of a final source map of an uglified javascript bundle
+            }
+        }) )
         .pipe( gulp.dest( 'dist' ) );
 });
 ```
@@ -82,6 +109,9 @@ You set a flag, removeSourcesContent, which will remove the sourcesContent field
 
 ~~You set a flag, fakeFix, which will fix it. The fake script filename wil changed to streemed source file name.~~
 
+Gulp added [~~gulp-browserify~~](https://github.com/deepak1556/gulp-browserify) to their [blacklist](https://github.com/gulpjs/plugins/issues/47)!
+Option fakeFix deprecated. Use 0.0.7 version, if You need it.
+
 #### sourceMappingFileName
 
 Type : `String`
@@ -92,12 +122,14 @@ As defult gulp-extract-sourcemap plugin cteate an external source map named as a
 
 Other than standard Node.js stream events, gulp-extract-sourcemap emits its own events.
 
-#### missing-map
+#### ~~missing-map~~
 
 ```javascript
 .on('missing-map', function(){})
 ```
-emitted if no map was found in the stream (the src still is piped through in this case, but no map file is piped)
+~~emitted if no map was found in the stream (the src still is piped through in this case, but no map file is piped)~~
+Event don't emit from version 0.1.0. You can use `postextract` event for the same target. If `sourceMapJson` equivalent to empty string, then 
+no map was found in the stream.
 
 #### postextract
 
@@ -107,11 +139,16 @@ emitted if no map was found in the stream (the src still is piped through in thi
 
 Event triggered after the source map extracting process is over and provides the source map data json object as an argument to the callback.
 
+It's necessary to correct generate of a final source map of an uglified javascript bundle without writing and reading intermediary files to disk.
+
+See [Usage](#usage) exsample.
+
 
 ### Works with gulp-extract-sourcemap
 
-- [gulp-browserify](https://github.com/deepak1556/gulp-browserify)
-- [gulp-rev](https://github.com/sindresorhus/gulp-rev)
+- [browserify](https://github.com/substack/node-browserify)
+- [vinyl-source-stream](https://github.com/hughsk/vinyl-source-stream)
+- [gulp-uglifyjs](https://github.com/craigjennings11/gulp-uglifyjs)
 
 ## License
 

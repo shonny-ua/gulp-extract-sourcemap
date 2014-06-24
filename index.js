@@ -45,21 +45,11 @@ function extract(opts){
                 if (sMap && opts.removeSourcesContent && sMap.sourcesContent) {
                     delete sMap.sourcesContent;
                 }
-
                 if (sMap && sMap.sources) {
                     var basedir = opts.basedir || file.cwd || process.cwd();
 
                     for (var i = sMap.sources.length; i--;) {
-                        var newSource = path.relative( basedir, sMap.sources[i] );
-                        
-                        if (opts.fakeFix && /\/fake_[0-9a-f]{8}\.js$/.test(newSource)) {
-                            var fNameRX = new RegExp( path.basename(newSource).replace(/[\-\[\]\{\}\(\)\*\+\?\.\^\$\|]/g, "\\$&"), 'g' );
-                            src = src.replace(fNameRX, path.basename(file.path));
-                            
-                            newSource = newSource.replace(fNameRX, path.basename(file.path));
-                        }
-
-                        sMap.sources[i] = newSource;
+                        sMap.sources[i] = path.relative( basedir, sMap.sources[i] );
                     }
                 }
             }
@@ -78,9 +68,6 @@ function extract(opts){
             file.contents = new Buffer(src);
         }
         this.push(file);
-        if (!sMap) {
-            this.emit('missing-map');
-        }
         this.emit('postextract', sMap);
         cb();
     });

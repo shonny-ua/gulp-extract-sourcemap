@@ -14,31 +14,21 @@ var sMapFileName    = fixturesDir + '/bundle.js.map';
 var mapedBundleSrc = fs.readFileSync( path.join(fixturesDir, 'bundle.js') );
 var unmapedBundleSrc = fs.readFileSync( path.join(fixturesDir, 'bundle.womap.js') );
 
-var defaultSources = [ '../node_modules/gulp-browserify/node_modules/browserify/node_modules/browser-pack/_prelude.js',
-  'fake_507e40f3.js',
+var defaultSources = [ '../node_modules/browserify/node_modules/browser-pack/_prelude.js',
+  'app.js',
   'hello.js',
-  'world.js',
-  '../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/index.js',
-  '../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js',
-  '../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js',
-  '../node_modules/gulp-browserify/node_modules/browserify/node_modules/process/browser.js' ];
+  'world.js' ];
 
-var basedirSources = [ 'node_modules/gulp-browserify/node_modules/browserify/node_modules/browser-pack/_prelude.js',
-  'hw/bundle.js',
+var basedirSources = [ 'node_modules/browserify/node_modules/browser-pack/_prelude.js',
+  'hw/app.js',
   'hw/hello.js',
-  'hw/world.js',
-  'node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/index.js',
-  'node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js',
-  'node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js',
-  'node_modules/gulp-browserify/node_modules/browserify/node_modules/process/browser.js' ];
+  'hw/world.js' ];
 
-var misingMapEvent;
 var mapFileInStream;
 var sourceMap;
 var sourceMapData;
 
 it('should javascript correct processed without any params', function (cb) {
-    misingMapEvent  =  false;
     mapFileInStream = false;
     sourceMap = undefined;
     sourceMap = undefined;
@@ -48,7 +38,6 @@ it('should javascript correct processed without any params', function (cb) {
         commonDataCB(file);
         if (path.extname(file.path) === '.js') {
             var src = file.contents.toString('utf8');
-            assert(/fake_507e40f3\.js/.test(src), 'javascript source must constaint fake require');
             assert(/\/\/# sourceMappingURL=bundle\.js\.map/.test(src), 'javascript source must constaint correct source map link');
         } else {
             assert.equal(file.path, 'src/bundle.js.map', 'correct source map filename');
@@ -56,7 +45,6 @@ it('should javascript correct processed without any params', function (cb) {
     });
 
     stream.on('end', function(){
-        assert.equal(misingMapEvent, false, 'misingMapEvent must be equal boolean false');
         assert.equal(mapFileInStream, true, 'mapFileInStream must be equal boolean true');
         assert.equal(typeof(sourceMap), 'object', 'typeof sourceMap must be oject');
         assert(_.isEqual(sourceMap, sourceMapData), 'sourceMap and sourceMapData must be equal');
@@ -69,14 +57,12 @@ it('should javascript correct processed without any params', function (cb) {
 });
 
 it('should javascript correct processed with params', function (cb) {
-    misingMapEvent  =  false;
     mapFileInStream = false;
     sourceMap = undefined;
     sourceMap = undefined;
     var stream =initStream(mapedBundleSrc, {
         basedir: '/test',
         removeSourcesContent: true,
-        fakeFix: true,
         sourceMappingFileName: 'http://static.exsample.com/js/souceMap.js.map'
     });
 
@@ -84,7 +70,6 @@ it('should javascript correct processed with params', function (cb) {
         commonDataCB(file);
         if (path.extname(file.path) === '.js') {
             var src = file.contents.toString('utf8');
-            assert(!/fake_507e40f3\.js/.test(src), 'javascript source musn\'t constaint fake require');
             assert(/\/\/# sourceMappingURL=http:\/\/static\.exsample\.com\/js\/souceMap\.js\.map/.test(src), 'javascript source must constaint correct source map link');
         } else {
             assert.equal(file.path, 'src/souceMap.js.map', 'correct source map filename');
@@ -92,7 +77,6 @@ it('should javascript correct processed with params', function (cb) {
     });
 
     stream.on('end', function(){
-        assert.equal(misingMapEvent, false, 'misingMapEvent must be equal boolean false');
         assert.equal(mapFileInStream, true, 'mapFileInStream must be equal boolean true');
         assert.equal(typeof(sourceMap), 'object', 'typeof sourceMap must be oject');
         assert(_.isEqual(sourceMap, sourceMapData), 'sourceMap and sourceMapData must be equal');
@@ -105,7 +89,6 @@ it('should javascript correct processed with params', function (cb) {
 });
 
 it('should missing-map event emit and postextract event provides empty string', function (cb) {
-    misingMapEvent  =  false;
     mapFileInStream = false;
     sourceMap = undefined;
     var stream =initStream(unmapedBundleSrc);
@@ -113,7 +96,6 @@ it('should missing-map event emit and postextract event provides empty string', 
     stream.on('data', commonDataCB);
 
     stream.on('end', function(){
-        assert.equal(misingMapEvent, true, 'misingMapEvent must be equal boolean true');
         assert.equal(mapFileInStream, false, 'mapFileInStream must be equal boolean false');
         assert.equal(sourceMap, '', 'sourceMap must be equal empty string');
         cb();
@@ -124,10 +106,6 @@ it('should missing-map event emit and postextract event provides empty string', 
 
 function initStream(source, opts) {
     var stream = extractor(opts);
-
-    stream.on('missing-map', function(){
-        misingMapEvent = true;
-    });
 
     stream.on('postextract', function(sourceObj){
         sourceMap = sourceObj;
