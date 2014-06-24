@@ -61,7 +61,7 @@ You set a flag, removeSourcesContent, which will remove the sourcesContent field
 
 ~~Type : `Boolean`~~
 
-~~[gulp-browserify](https://github.com/deepak1556/gulp-browserify) outputs bundled JavaScript code and inline source map containt refs to fake script filename like fake_1d87bebe.js. It causes some problems with correct source maps working in browsers. Also, if we use a bundled assets checksum version control, we have a problem. Same unchanged code after bundling have other checksum. The cause for this is random 8 symbols in said fake script filename.
+[~~gulp-browserify~~](https://github.com/deepak1556/gulp-browserify) ~~outputs bundled JavaScript code and inline source map containt refs to fake script filename like fake_1d87bebe.js. It causes some problems with correct source maps working in browsers. Also, if we use a bundled assets checksum version control, we have a problem. Same unchanged code after bundling have other checksum. The cause for this is random 8 symbols in said fake script filename.
 
 You set a flag, fakeFix, which will fix it. The fake script filename wil changed to streemed source file name.~~
 
