@@ -130,7 +130,7 @@ Other than standard Node.js stream events, gulp-extract-sourcemap emits its own 
 .on('missing-map', function(){})
 ```
 ~~emitted if no map was found in the stream (the src still is piped through in this case, but no map file is piped)~~
-Event don't emit from version 0.1.0. You can use `postextract` event for the same target. If `sourceMapJson` equivalent to empty string, then 
+Event don't emit from version 0.1.0. You can use `postextract` event for the same goal. If `sourceMapJson` equivalent to empty string, then 
 no map was found in the stream.
 
 #### postextract
