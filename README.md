@@ -143,7 +143,7 @@ Event triggered after the source map extracting process is over and provides the
 
 It's necessary to correct generate of a final source map of an uglified javascript bundle without writing and reading intermediary files to disk.
 
-See [Usage](#usage) exsample.
+See [Usage](#usage) example.
 
 
 ### Works with gulp-extract-sourcemap
