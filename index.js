@@ -22,6 +22,9 @@ function extract(opts){
             if (!~pos) {
                 pos = src.indexOf('//@ sourceMappingURL=data:application/json;base64,');
             }
+            if (!~pos) {
+                pos = src.indexOf('/*@ sourceMappingURL=data:application/json;base64,');
+            }
 
             if (~pos) {
                 try {
@@ -62,7 +65,15 @@ function extract(opts){
                     contents: new Buffer( JSON.stringify( sMap ) )
                 }));
 
-                src += '//# sourceMappingURL=' + (opts.sourceMappingFileName || sMapFileName);
+                switch(path.extname(file.path)) {
+                    case '.css':
+                        src += '/*# sourceMappingURL=' + (opts.sourceMappingFileName || sMapFileName) + ' */';
+                        break;
+
+                    default:
+                        src += '//# sourceMappingURL=' + (opts.sourceMappingFileName || sMapFileName);
+                }
+
             }
 
             file.contents = new Buffer(src);
