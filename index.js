@@ -18,7 +18,7 @@ function extract(opts){
             var src = file.contents.toString('utf8');
             var sMapFileName = opts.sourceMappingFileName ? path.basename(opts.sourceMappingFileName) : ( path.basename(file.path) + '.map' );
 
-            var pos = src.search(/\/[\/\*][#@]\s+sourceMappingURL=data:application\/json;base64,/i)
+            var pos = src.search(/\/[\/\*][#@]\s+sourceMappingURL=data:application\/json;(?:charset:utf-8;)?base64,/i)
 
             if (~pos) {
                 try {
