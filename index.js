@@ -46,9 +46,8 @@ function extract(opts){
                     var basedir = opts.basedir || file.cwd || process.cwd();
 
                     for (var i = sMap.sources.length; i--;) {
-                        var normalizedPath = path.relative( basedir, sMap.sources[i] );
-                        normalizedPath = normalizedPath.split(path.sep).join('/');
-                        sMap.sources[i] = normalizedPath;
+                        sMap.sources[i] = path.relative( basedir, sMap.sources[i] )
+                                                .split(path.sep).join('/');
                     }
                 }
             }
