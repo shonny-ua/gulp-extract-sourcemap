@@ -44,7 +44,7 @@ it('should javascript correct processed without any params', function (cb) {
             var src = file.contents.toString('utf8');
             assert(/\/\/# sourceMappingURL=bundle\.js\.map/.test(src), 'javascript source must constaint correct source map link');
         } else {
-            assert.equal(file.path, 'src/bundle.js.map', 'correct source map filename');
+            assert.equal(file.path, path.join('src', 'bundle.js.map'), 'correct source map filename');
         }
     });
 
@@ -84,7 +84,7 @@ it('should css correct processed without any params', function (cb) {
             var src = file.contents.toString('utf8');
             assert(/\/\*# sourceMappingURL=icons\.css\.map \*\//.test(src), 'css source must constaint correct source map link');
         } else {
-            assert.equal(file.path, 'css/icons.css.map', 'correct source map filename');
+            assert.equal(file.path, path.join('css', 'icons.css.map'), 'correct source map filename');
         }
     });
 
@@ -116,7 +116,7 @@ it('should javascript correct processed with params', function (cb) {
             var src = file.contents.toString('utf8');
             assert(/\/\/# sourceMappingURL=http:\/\/static\.exsample\.com\/js\/souceMap\.js\.map/.test(src), 'javascript source must constaint correct source map link');
         } else {
-            assert.equal(file.path, 'src/souceMap.js.map', 'correct source map filename');
+            assert.equal(file.path, path.join('src', 'souceMap.js.map'), 'correct source map filename');
         }
     });
 
@@ -142,6 +142,27 @@ it('should missing-map event emit and postextract event provides empty string', 
     stream.on('end', function(){
         assert.equal(mapFileInStream, false, 'mapFileInStream must be equal boolean false');
         assert.equal(sourceMap, '', 'sourceMap must be equal empty string');
+        cb();
+    });
+
+    stream.end();
+});
+
+it('should normalize map sources', function (cb) {
+    mapFileInStream = false;
+    sourceMap = undefined;
+    sourceMapData = undefined;
+    var stream =initStream(mapedBundleSrc);
+
+    stream.on('data', function(file){
+        commonDataCB(file);
+    });
+
+    stream.on('end', function(){
+        sourceMap.sources.forEach(function(normalizedPath){
+            var expectedPath = normalizedPath.split('\\').join('/');
+            assert.equal(normalizedPath, expectedPath, 'sources paths must be normalized');
+        })
         cb();
     });
 
